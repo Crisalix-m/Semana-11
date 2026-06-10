@@ -11,7 +11,7 @@ MQTT_TOPIC = "fisi/smat/estaciones/+/lecturas"
 API_URL = "http://localhost:8000/lecturas/"
 
 # Token JWT generado previamente
-JWT_TOKEN = "eyJhbGciOiJIUzI1NilsInR5cCl6lkpXVCJ9..."
+JWT_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbl9maXNpIiwiZXhwIjoxNzgxMTM1MzgwfQ.eao0b4y_GJ6s9yDGghd5wD5F8mfIuJO1xo0U2F8SJZA"
 
 # MEMORIA CACHÉ LOCAL
 # Estructura: { estacion_id: {"ultimo_valor": float, "ultimo_tiempo": float} }
@@ -72,7 +72,7 @@ def on_message(client, userdata, msg):
 
         # PROCESAMIENTO O BLOQUEO DE LA PETICIÓN
         if enviar_a_api:
-            print(f"   🚀 [Filtro PERMITIDO] -> {razon_envio}. Enviando a FastAPI...")
+            print(f" 🚀 [Filtro PERMITIDO] -> {razon_envio}. Enviando a FastAPI...")
             
             # Formatear la carga útil para FastAPI
             api_payload = {
@@ -89,7 +89,6 @@ def on_message(client, userdata, msg):
             response = requests.post(API_URL, json=api_payload, headers=headers)
 
             if response.status_code in [200, 201]:
-                print(f"   💾 [DB Sincronizada] Lectura de {nuevo_valor} cm guardada en SQLite.")
                 
                 # Actualizamos la caché local SOLO si la base de datos confirmó el guardado
                 cache_estaciones[estacion_id] = {
@@ -97,10 +96,10 @@ def on_message(client, userdata, msg):
                     "ultimo_tiempo": tiempo_actual
                 }
             else:
-                print(f"   ⚠️ [Fallo de Ingesta] API rechazó el dato. Código: {response.status_code} - {response.text}")
+                print(f" ⚠️ [Fallo de Ingesta] API rechazó el dato. Código: {response.status_code} - {response.text}")
         else:
             # Aquí cumplimos la validación por logs que pide el entregable
-            print(f"   🛑 [Filtro BLOQUEADO] -> El valor {nuevo_valor} cm es redundante (no supera el ±5% ni los 60s).")
+            print(f"🛑 [Filtro BLOQUEADO] -> El valor {nuevo_valor} cm es redundante (no supera el ±5% ni los 60s).")
 
     except KeyError as e:
         print(f"❌ Error de esquema: Falta la llave {e} en el payload MQTT.")
