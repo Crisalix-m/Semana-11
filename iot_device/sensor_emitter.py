@@ -2,7 +2,7 @@ import requests
 import time
 import random
 import json  # <--- Importante para dar formato al payload de MQTT
-import paho.mqtt.client as mqtt  # <--- Inyectamos la librería MQTT para telemetría
+import paho.mqtt.client as mqtt  # <---Librería MQTT para telemetría
 
 BASE_URL = "http://localhost:8000"
 # Cambiamos las variables de HTTP por las variables de red del Broker MQTT
